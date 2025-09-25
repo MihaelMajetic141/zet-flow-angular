@@ -1,0 +1,48 @@
+<div class="map-container">
+  <div id="map"></div>
+  <div class="search-bar" #searchBar>
+    <input type="text" [value]="searchTerm()"
+      (input)="searchTerm.set($event.target.value); showDropdown.set(!!$event.target.value)"
+      placeholder="Search by Route ID or Name" />
+
+    @if (searchTerm()) {
+    <button class="clear-btn" (click)="clearSearch()">X</button>
+    }
+
+    <!-- Dropdown -->
+    @if (showDropdown() && searchResults().length > 0) {
+    <div class="search-dropdown">
+      @for (result of searchResults(); track result.routeId) {
+      <div class="search-row" (click)="selectRoute(result)">
+        <div class="icon" [style.backgroundColor]="getVehicleColor(result.routeType)"
+          [innerHTML]="getVehicleIcon(result.routeType)">
+        </div>
+        <div class="info">
+          <div class="route-id">{{ result.routeId }}</div>
+          <div class="route-name">{{ result.routeName }}</div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  @if (tripDetails()) {
+  <div class="sidebar" [class.open]="tripDetails()">
+    <h2>{{ tripDetails()?.routeId ?? 'N/A' }} {{ tripDetails()?.routeName ?? 'N/A' }}</h2>
+    <ul>
+      @for (stop of tripDetails()?.stopTimes; track $index; let i = $index) {
+      <li (click)="flyToStop(stop)">
+        <b>{{ i + 1 }}: {{ stop.stopName ?? 'N/A' }}</b>
+        @if(stop.arrivalTime == stop.departureTime) {
+        {{ stop.arrivalTime ?? 'N/A' }}<br>
+        } @else {
+        Arrival: {{ stop.arrivalTime ?? 'N/A' }}<br>
+        Departure: {{ stop.departureTime ?? 'N/A' }}<br>
+        }
+      </li>
+      }
+    </ul>
+    <button class="close-trip-button" (click)="closeSidebar()">X</button>
+  </div>
+  }
+</div>
