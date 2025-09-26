@@ -8,8 +8,6 @@
     @if (searchTerm()) {
     <button class="clear-btn" (click)="clearSearch()">X</button>
     }
-
-    <!-- Dropdown -->
     @if (showDropdown() && searchResults().length > 0) {
     <div class="search-dropdown">
       @for (result of searchResults(); track result.routeId) {

@@ -139,7 +139,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         const marker = this.vehicleMarkers.get(activeMarkerId)!;
 
         if (!this.userInteracted) {
-          this.map.setView(marker.getLatLng());
+          const latLng: Leaflet.LatLngExpression = marker.getLatLng();
+          this.map.flyTo(latLng, 16, { duration: 2 });
         }
       }
     }
